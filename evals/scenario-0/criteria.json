@@ -1,0 +1,61 @@
+{
+  "context": "Tests whether the agent follows the code-ticket workflow in the correct order: checking for tests before implementing, running the full suite post-implementation, using the prescribed scripts to open a PR, requesting Copilot review, waiting for the result, and only merging after a clean review.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Tests-first check command",
+      "description": "The plan includes running `python3 scripts/run_tests.py --check` as the first step, before any implementation work",
+      "max_score": 12
+    },
+    {
+      "name": "Gate on non-zero exit",
+      "description": "The plan explicitly states that if `run_tests.py --check` exits non-zero, the agent stops and writes tests before proceeding — does NOT skip ahead to implementation",
+      "max_score": 10
+    },
+    {
+      "name": "Full suite after implementation",
+      "description": "After implementation, the plan runs `python3 scripts/run_tests.py` (without --check) to execute the full test suite",
+      "max_score": 8
+    },
+    {
+      "name": "Iterate until suite passes",
+      "description": "The plan describes fixing failures and re-running the suite until it exits 0, not stopping after a single run",
+      "max_score": 8
+    },
+    {
+      "name": "PR opened via script",
+      "description": "The plan opens the PR with `python3 scripts/open_pr.py --title \"...\" --body \"...\"`, not a manual git push or gh command",
+      "max_score": 8
+    },
+    {
+      "name": "Copilot review requested",
+      "description": "The plan calls `python3 scripts/request_copilot_review.py <pr-number>` after opening the PR",
+      "max_score": 9
+    },
+    {
+      "name": "Await review via script",
+      "description": "The plan calls `python3 scripts/await_copilot_review.py <pr-number>` to wait for the Copilot review result (not a polling loop or manual check)",
+      "max_score": 9
+    },
+    {
+      "name": "Merge only after clean review",
+      "description": "The plan explicitly conditions the merge step on the review JSON reporting `\"clean\": true`",
+      "max_score": 10
+    },
+    {
+      "name": "Merge via script",
+      "description": "The plan merges using `python3 scripts/merge_pr.py <pr-number>`, not a manual git merge or gh pr merge command",
+      "max_score": 8
+    },
+    {
+      "name": "Fix-review loop described",
+      "description": "The plan describes what to do if `clean` is false: fix every comment, push, re-request the review, and wait again",
+      "max_score": 9
+    },
+    {
+      "name": "Correct step ordering",
+      "description": "All steps appear in the correct order: check → implement → full-suite → open PR → request review → await review → (fix loop if needed) → merge",
+      "max_score": 9
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "context": "Tests whether the agent correctly classifies ticket types and applies the appropriate workflow: documentation-only ticket gets human review (not Copilot), while a code ticket (including an ambiguous one) gets the full tests-first and Copilot-review workflow. Also tests that docs workflow stays minimal.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Ticket A classified as docs",
+      "description": "Ticket A (README fix) is classified as a documentation-only ticket",
+      "max_score": 8
+    },
+    {
+      "name": "Ticket B classified as code",
+      "description": "Ticket B (YAML config loader) is classified as a code ticket — even though there may be doc changes, source code is involved",
+      "max_score": 8
+    },
+    {
+      "name": "Ticket A: no Copilot review",
+      "description": "The Ticket A plan does NOT include calling `scripts/request_copilot_review.py`",
+      "max_score": 12
+    },
+    {
+      "name": "Ticket A: human review stated",
+      "description": "The Ticket A plan explicitly states the PR will be reviewed by a human (not the bot)",
+      "max_score": 10
+    },
+    {
+      "name": "Ticket A: no extra steps",
+      "description": "The Ticket A plan has no steps beyond: make the change, open the PR, wait for human approval, merge — it does not add test runs or other code-workflow steps",
+      "max_score": 8
+    },
+    {
+      "name": "Ticket A: PR opened via script",
+      "description": "The Ticket A plan opens the PR with `python3 scripts/open_pr.py --title \"...\" --body \"...\"`",
+      "max_score": 6
+    },
+    {
+      "name": "Ticket B: tests-first check",
+      "description": "The Ticket B plan starts with `python3 scripts/run_tests.py --check` before any implementation",
+      "max_score": 10
+    },
+    {
+      "name": "Ticket B: full suite run",
+      "description": "The Ticket B plan runs `python3 scripts/run_tests.py` (no flags) after implementation",
+      "max_score": 6
+    },
+    {
+      "name": "Ticket B: Copilot review requested",
+      "description": "The Ticket B plan calls `python3 scripts/request_copilot_review.py <pr-number>`",
+      "max_score": 10
+    },
+    {
+      "name": "Ticket B: merge only after clean",
+      "description": "The Ticket B plan conditions merge on `\"clean\": true` from `await_copilot_review.py`",
+      "max_score": 10
+    },
+    {
+      "name": "Ticket B: merge via script",
+      "description": "The Ticket B plan merges with `python3 scripts/merge_pr.py <pr-number>`",
+      "max_score": 6
+    },
+    {
+      "name": "Ticket A: merge via script",
+      "description": "The Ticket A plan merges with `python3 scripts/merge_pr.py <pr-number>`",
+      "max_score": 6
+    }
+  ]
+}

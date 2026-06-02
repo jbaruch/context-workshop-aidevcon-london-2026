@@ -1,0 +1,51 @@
+{
+  "context": "Tests whether the agent correctly handles a Copilot review with clean=false: addresses every comment before proceeding, uses the prescribed scripts for re-requesting review and awaiting results, and only merges when clean=true.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Addresses both comments",
+      "description": "The plan describes addressing both review comments (the guard logic change AND the missing test case), not just one",
+      "max_score": 12
+    },
+    {
+      "name": "No selective skipping",
+      "description": "The plan does NOT propose ignoring or deferring any comment (e.g. does not say 'this comment is minor' or 'I'll handle it later')",
+      "max_score": 10
+    },
+    {
+      "name": "Re-request via script",
+      "description": "After pushing the fix, the plan calls `python3 scripts/request_copilot_review.py 47` (or equivalent PR number) to re-request the review",
+      "max_score": 12
+    },
+    {
+      "name": "Await review again via script",
+      "description": "After re-requesting, the plan calls `python3 scripts/await_copilot_review.py 47` to wait for the next review result",
+      "max_score": 12
+    },
+    {
+      "name": "Merge conditioned on clean=true",
+      "description": "The plan explicitly states it will only call merge when the subsequent review returns `\"clean\": true`",
+      "max_score": 12
+    },
+    {
+      "name": "Merge via script",
+      "description": "Merge is performed with `python3 scripts/merge_pr.py 47` (not gh pr merge or git merge)",
+      "max_score": 10
+    },
+    {
+      "name": "Repeat loop if still not clean",
+      "description": "The plan describes that if the second review also returns clean=false, the fix-request-await cycle repeats — it does not merge unconditionally after one round",
+      "max_score": 12
+    },
+    {
+      "name": "No premature merge",
+      "description": "The plan does NOT include a merge step before the second `await_copilot_review.py` result is confirmed as clean",
+      "max_score": 10
+    },
+    {
+      "name": "Full suite run before re-request",
+      "description": "The plan runs `python3 scripts/run_tests.py` (full suite) after making code changes and before re-requesting the review",
+      "max_score": 10
+    }
+  ]
+}

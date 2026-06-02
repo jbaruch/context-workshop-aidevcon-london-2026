@@ -1,0 +1,15 @@
+{
+  "name": "jbaruch/context-workshop",
+  "version": "0.0.1",
+  "description": "Decomposed ticket workflow from the AI Native DevCon London 2026 context workshop: skills for code and documentation tickets, the mandatory tests-first / clean-review / human-review rules, and the deterministic scripts/ they lean on.",
+  "private": false,
+  "skills": [
+    "skills/code-ticket",
+    "skills/documentation-ticket"
+  ],
+  "rules": [
+    "rules/tests-first.md",
+    "rules/merge-on-clean-review.md",
+    "rules/docs-need-human-review.md"
+  ]
+}
