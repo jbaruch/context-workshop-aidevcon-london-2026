@@ -1,0 +1,10 @@
+# OS / editor / tooling
+.DS_Store
+*.log
+.venv/
+venv/
+node_modules/
+__pycache__/
+*.pyc
+.idea/
+.vscode/
