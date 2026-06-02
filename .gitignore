@@ -1,4 +1,5 @@
 # OS / editor / tooling
+.cache/
 .DS_Store
 *.log
 .venv/
